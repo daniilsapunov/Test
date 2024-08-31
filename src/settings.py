@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     PGPASSWORD: str = Field(..., env="PGPASSWORD")
     PGDATABASE: str = Field(..., env="PGDATABASE")
     PGPORT: int = Field(..., env="PGPORT")
+    SECRET_KEY: str = Field(..., env="SECRET_KEY")
+    ALGORITHM: str = Field(..., env="ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES: str = Field(..., env="ACCESS_TOKEN_EXPI")
 
     @property
     def database_url_asyncpg(self):

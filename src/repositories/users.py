@@ -1,4 +1,4 @@
-from models.users import Users
+from models.users import Users, UserInDB
 from utils.repository import SQLAlchemyRepository
 
 
