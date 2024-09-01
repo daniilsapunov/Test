@@ -10,4 +10,4 @@ class Hasher:
 
     @staticmethod
     def verify_password(hashed_password: str, provided_password: str) -> bool:
-        return pwd_context.verify(hashed_password, provided_password )
+        return pwd_context.verify(hashed_password, provided_password)

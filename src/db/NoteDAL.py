@@ -10,9 +10,9 @@ class NoteDAL:
         self.db_session = db_session
 
     async def create_note(
-            self,
-            title: str,
-            author_id: int,
+        self,
+        title: str,
+        author_id: int,
     ) -> Notes:
         new_note = Notes(
             title=title,
@@ -21,4 +21,3 @@ class NoteDAL:
         self.db_session.add(new_note)
         await self.db_session.flush()
         return new_note
-

@@ -15,10 +15,10 @@ class UserDAL:
         self.db_session = db_session
 
     async def create_user(
-            self,
-            name: str,
-            email: str,
-            hashed_password: str,
+        self,
+        name: str,
+        email: str,
+        hashed_password: str,
     ) -> Users:
         new_user = Users(
             name=name,
@@ -43,13 +43,6 @@ class UserDAL:
 
     async def get_user_by_name(self, name: str) -> Union[Users, None]:
         query = select(Users).where(Users.name == name)
-        res = await self.db_session.execute(query)
-        user_row = res.fetchone()
-        if user_row is not None:
-            return user_row[0]
-
-    async def get_user_by_email(self, email: str) -> Union[Users, None]:
-        query = select(Users).where(Users.email == email)
         res = await self.db_session.execute(query)
         user_row = res.fetchone()
         if user_row is not None:

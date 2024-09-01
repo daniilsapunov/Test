@@ -16,28 +16,30 @@ from utils.utils import Hasher
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/token")
 
-async def _get_user_by_name_for_auth(email: str, session: AsyncSession):
+
+async def _get_user_by_name_for_auth(name: str, session: AsyncSession):
     async with session.begin():
         user_dal = UserDAL(session)
-        return await user_dal.get_user_by_email(
-            email=email,
+        return await user_dal.get_user_by_name(
+            name=name,
         )
 
 
 async def authenticate_user(
-    email: str, password: str, db: AsyncSession
+    name: str, password: str, db: AsyncSession
 ) -> Union[Users, None]:
-    user = await _get_user_by_name_for_auth(email=email, session=db)
+    user = await _get_user_by_name_for_auth(name=name, session=db)
     if user is None:
         return
     if not Hasher.verify_password(password, user.hashed_password):
         return
     return user
 
+
 async def get_current_user_from_token(
     token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_session)
 ):
-    print('!!!!!ЗАШЛО!!!!')
+    print("!!!!!ЗАШЛО!!!!")
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -46,12 +48,12 @@ async def get_current_user_from_token(
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        email: str = payload.get("sub")
-        if email is None:
+        name: str = payload.get("sub")
+        if name is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = await _get_user_by_name_for_auth(email=email, session=db)
+    user = await _get_user_by_name_for_auth(name=name, session=db)
     if user is None:
         raise credentials_exception
     return user

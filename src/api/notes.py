@@ -19,7 +19,9 @@ router = APIRouter(
 
 
 @router.post("", response_model=ShowNote)
-async def create_note(body: NoteCreate, db: AsyncSession = Depends(get_async_session)) -> ShowNote:
+async def create_note(
+    body: NoteCreate, db: AsyncSession = Depends(get_async_session)
+) -> ShowNote:
     try:
         corrected_text = await check_text(body.title)
         body.title = corrected_text
@@ -30,7 +32,9 @@ async def create_note(body: NoteCreate, db: AsyncSession = Depends(get_async_ses
 
 
 @router.get("/get_notes")
-async def get_notes_for_user(current_user: Users = Depends(get_current_user_from_token), ):
+async def get_notes_for_user(
+    current_user: Users = Depends(get_current_user_from_token),
+):
     return {"Success": True, "current_user": current_user}
 
 

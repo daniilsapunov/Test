@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     @property
     def database_url_asyncpg(self):
-        return f'postgresql+asyncpg://{self.PGUSER}:{self.PGPASSWORD}@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}'
+        return f"postgresql+asyncpg://{self.PGUSER}:{self.PGPASSWORD}@{self.PGHOST}:{self.PGPORT}/{self.PGDATABASE}"
 
     class Config:
         env_file = "../.env"

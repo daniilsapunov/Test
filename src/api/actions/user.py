@@ -33,13 +33,11 @@ async def _delete_user(user_id, session) -> Union[UUID, None]:
 
 
 async def _update_user(
-        updated_user_params: dict, user_id: UUID, session
+    updated_user_params: dict, user_id: UUID, session
 ) -> Union[UUID, None]:
     async with session.begin():
         user_dal = UserDAL(session)
-        updated_user_id = await user_dal.update_user(
-            id=user_id, **updated_user_params
-        )
+        updated_user_id = await user_dal.update_user(id=user_id, **updated_user_params)
         return updated_user_id
 
 

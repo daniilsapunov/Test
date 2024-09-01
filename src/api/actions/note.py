@@ -14,5 +14,4 @@ async def _create_new_note(body: NoteCreate, session) -> ShowNote:
             id=note.id,
             title=note.title,
             author_id=note.author_id,
-
         )
