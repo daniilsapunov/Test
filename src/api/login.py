@@ -14,12 +14,12 @@ from db.db import get_async_session
 from utils.security import create_access_token
 
 router = APIRouter(
-    prefix="/token",
-    tags=["Token"],
+    prefix="/login",
+    tags=["Login"],
 )
 
 
-@router.post("", response_model=Token)
+@router.post("/token", response_model=Token)
 async def login_for_access_token(
         form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_async_session)
 ):
@@ -33,7 +33,7 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.name},
+        data={"sub": user.email, "name": user.name},
         expires_delta=access_token_expires,
     )
     return {"access_token": access_token, "token_type": "bearer"}

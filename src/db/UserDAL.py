@@ -1,5 +1,4 @@
 from typing import Union
-from uuid import UUID
 
 from sqlalchemy import and_
 from sqlalchemy import select
@@ -41,13 +40,6 @@ class UserDAL:
         deleted_user_id_row = res.fetchone()
         if deleted_user_id_row is not None:
             return deleted_user_id_row[0]
-
-    async def get_user_by_id(self, user_id: UUID) -> Union[Users, None]:
-        query = select(Users).where(Users.user_id == user_id)
-        res = await self.db_session.execute(query)
-        user_row = res.fetchone()
-        if user_row is not None:
-            return user_row[0]
 
     async def get_user_by_name(self, name: str) -> Union[Users, None]:
         query = select(Users).where(Users.name == name)

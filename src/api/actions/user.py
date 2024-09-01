@@ -4,7 +4,6 @@ from uuid import UUID
 from schemas.users import ShowUser
 from schemas.users import UserCreate
 from db.UserDAL import UserDAL
-from models.users import Users
 from utils.utils import Hasher
 
 

@@ -18,5 +18,4 @@ class Users(Base):
             name=self.name,
             email=self.email,
             is_active=self.is_active,
-            hashed_password=self.hashed_password,  # don't expose the hashed password in the response
         )

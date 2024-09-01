@@ -21,9 +21,7 @@ router = APIRouter(
 @router.post("", response_model=ShowNote)
 async def create_note(body: NoteCreate, db: AsyncSession = Depends(get_async_session)) -> ShowNote:
     try:
-        print(body.title)
         corrected_text = await check_text(body.title)
-        print(corrected_text)
         body.title = corrected_text
         return await _create_new_note(body, db)
     except IntegrityError as err:

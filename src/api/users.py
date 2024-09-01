@@ -2,10 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.actions.auth import get_current_user_from_token
 from api.actions.user import _create_new_user
-from db.db import get_async_session, async_session_maker
-from models.users import Users
+from db.db import get_async_session
 from schemas.users import ShowUser, UserCreate
 from logging import getLogger
 
