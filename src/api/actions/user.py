@@ -44,11 +44,11 @@ async def _update_user(
         return updated_user_id
 
 
-async def _get_user_by_id(user_id, session) -> Union[Users, None]:
-    async with session.begin():
-        user_dal = UserDAL(session)
-        user = await user_dal.get_user_by_id(
-            id=user_id,
-        )
-        if user is not None:
-            return user
+# async def _get_user_by_id(user_id, session) -> Union[Users, None]:
+#     async with session.begin():
+#         user_dal = UserDAL(session)
+#         user = await user_dal.get_user_by_id(
+#             id=user_id,
+#         )
+#         if user is not None:
+#             return user

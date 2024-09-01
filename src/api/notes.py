@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import Annotated
+
+from api.actions.auth import get_current_user_from_token
+from models.users import Users
 from services.speller_service import check_text
-from api.dependies import notes_service
-from services.notes import NotesService
 import traceback
 from db.db import get_async_session
 from schemas.notes import NoteCreate, ShowNote
@@ -29,6 +29,11 @@ async def create_note(body: NoteCreate, db: AsyncSession = Depends(get_async_ses
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
+
+
+@router.get("/get_notes")
+async def get_notes_for_user(current_user: Users = Depends(get_current_user_from_token), ):
+    return {"Success": True, "current_user": current_user}
 
 
 # @router.get("")

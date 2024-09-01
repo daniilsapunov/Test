@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.actions.auth import get_current_user_from_token
 from api.actions.user import _create_new_user
-from db.db import get_async_session
+from db.db import get_async_session, async_session_maker
 from models.users import Users
 from schemas.users import ShowUser, UserCreate
 from logging import getLogger
@@ -18,7 +17,6 @@ router = APIRouter(
 )
 
 
-
 @router.post("/", response_model=ShowUser)
 async def create_user(body: UserCreate, db: AsyncSession = Depends(get_async_session)) -> ShowUser:
     try:
@@ -26,8 +24,3 @@ async def create_user(body: UserCreate, db: AsyncSession = Depends(get_async_ses
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
-
-
-@router.get("/test_auth")
-async def sample_endpoint(current_user: Users = Depends(get_current_user_from_token),):
-    return {"Success": True, 'current_user': current_user}
