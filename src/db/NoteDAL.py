@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from typing import List
 from models.notes import Notes
+from sqlalchemy import select
 
 
 class NoteDAL:
@@ -21,3 +22,8 @@ class NoteDAL:
         self.db_session.add(new_note)
         await self.db_session.flush()
         return new_note
+
+    async def get_notes_by_author(self, author_id: int):
+        query = select(Notes).where(Notes.author_id == author_id)
+        result = await self.db_session.execute(query)
+        return result.scalars().all()

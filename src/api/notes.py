@@ -9,7 +9,7 @@ from schemas.notes import NoteCreate, ShowNote
 from sqlalchemy.ext.asyncio import AsyncSession
 from logging import getLogger
 from sqlalchemy.exc import IntegrityError
-from api.actions.note import _create_new_note
+from api.actions.note import _create_new_note, _get_all_notes_for_user
 
 logger = getLogger(__name__)
 router = APIRouter(
@@ -31,20 +31,13 @@ async def create_note(
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
 
-@router.get("/get_notes")
-async def get_notes_for_user(
+@router.get("")
+async def get_notes(
     current_user: Users = Depends(get_current_user_from_token),
+    db: AsyncSession = Depends(get_async_session),
 ):
-    return {"Success": True, "current_user": current_user}
-
-
-# @router.get("")
-# async def get_notes(
-#         notes_service: Annotated[NotesService, Depends(notes_service)],
-#         id: int
-# ):
-#     tasks = await notes_service.get_notes(id)
-#     return tasks
+    user_id = current_user.id
+    return await _get_all_notes_for_user(user_id, db)
 
 
 @router.post("/check/")
