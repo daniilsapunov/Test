@@ -1,15 +1,19 @@
 from pydantic import BaseModel
 
 
-class NoteSchema(BaseModel):
+class TunedModel(BaseModel):
+    class Config:
+        """tells pydantic to convert even non dict obj to json"""
+
+        from_attributes = True
+
+
+class ShowNote(TunedModel):
     id: int
     title: str
     author_id: int
 
-    class Config:
-        from_attributes = True
 
-
-class NoteSchemaAdd(BaseModel):
+class NoteCreate(BaseModel):
     title: str
     author_id: int

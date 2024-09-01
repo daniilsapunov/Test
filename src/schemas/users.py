@@ -1,13 +1,26 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
-class UserSchema(BaseModel):
-    id: int
-    name: str
-
+class TunedModel(BaseModel):
     class Config:
+        """tells pydantic to convert even non dict obj to json"""
+
         from_attributes = True
 
 
-class UserSchemaAdd(BaseModel):
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class ShowUser(TunedModel):
+    id: int
     name: str
+    email: EmailStr
+    is_active: bool
+
+
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    password: str

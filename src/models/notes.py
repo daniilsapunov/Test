@@ -2,7 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, DateTime
 from datetime import datetime
 from db.db import Base
-from schemas.notes import NoteSchema
+from schemas.notes import ShowNote
 
 
 class Notes(Base):
@@ -13,8 +13,8 @@ class Notes(Base):
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    def to_read_model(self) -> NoteSchema:
-        return NoteSchema(
+    def to_read_model(self) -> ShowNote:
+        return ShowNote(
             id=self.id,
             title=self.title,
             author_id=self.author_id,

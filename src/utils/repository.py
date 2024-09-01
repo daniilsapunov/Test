@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy import insert, select
 
 from db.db import async_session_maker
+from utils.utils import Hasher
 
 
 class AbstractRepository(ABC):
@@ -20,10 +21,11 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def add_one(self, data: dict) -> int:
         async with async_session_maker() as session:
-            stmt = insert(self.model).values(**data).returning(self.model.id)
+            data["hashed_password"] = Hasher.hash_password(data["password"])
+            stmt = insert(self.model).values(**data)
             res = await session.execute(stmt)
             await session.commit()
-            return res.scalar_one()
+            return res.inserted_primary_key[0]
 
     async def find_all(self, *filter):
         async with async_session_maker() as session:

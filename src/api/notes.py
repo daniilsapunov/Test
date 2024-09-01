@@ -4,41 +4,40 @@ from services.speller_service import check_text
 from api.dependies import notes_service
 from services.notes import NotesService
 import traceback
-from schemas.notes import NoteSchemaAdd
-from repositories.notes import NotesRepository
+from db.db import get_async_session
+from schemas.notes import NoteCreate, ShowNote
+from sqlalchemy.ext.asyncio import AsyncSession
+from logging import getLogger
+from sqlalchemy.exc import IntegrityError
+from api.actions.note import _create_new_note
 
+logger = getLogger(__name__)
 router = APIRouter(
     prefix="/notes",
     tags=["Notes"],
 )
 
 
-@router.post("")
-async def add_task(
-        note: NoteSchemaAdd,
-        notes_service: Annotated[NotesService, Depends(notes_service)],
-):
+@router.post("", response_model=ShowNote)
+async def create_note(body: NoteCreate, db: AsyncSession = Depends(get_async_session)) -> ShowNote:
     try:
-        # Проверяем текст заметки
-        corrected_text = await check_text(note.title)  # Предполагаем, что текст в поле 'text'
-
-        # Сохраняем заметку с исправленным текстом
-        note.title = corrected_text  # Заменяем текст на исправленный
-        task_id = await notes_service.add_notes(note)
-        return {"task_id": task_id}
-
-    except Exception as e:
-        print(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=str(e))
+        print(body.title)
+        corrected_text = await check_text(body.title)
+        print(corrected_text)
+        body.title = corrected_text
+        return await _create_new_note(body, db)
+    except IntegrityError as err:
+        logger.error(err)
+        raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
 
-@router.get("")
-async def get_notes(
-        notes_service: Annotated[NotesService, Depends(notes_service)],
-        id: int
-):
-    tasks = await notes_service.get_notes(id)
-    return tasks
+# @router.get("")
+# async def get_notes(
+#         notes_service: Annotated[NotesService, Depends(notes_service)],
+#         id: int
+# ):
+#     tasks = await notes_service.get_notes(id)
+#     return tasks
 
 
 @router.post("/check/")

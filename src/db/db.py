@@ -11,5 +11,8 @@ Base = declarative_base()
 
 
 async def get_async_session() -> Generator:
-    async with async_session_maker() as session:
+    try:
+        session: AsyncSession = async_session_maker()
         yield session
+    finally:
+        await session.close()
